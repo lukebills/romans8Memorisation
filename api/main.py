@@ -24,7 +24,7 @@ def load_verses():
 
 START_VERSE = 3
 TIMEZONE = 'Australia/Perth'
-START_DATE = datetime(2025, 5, 1)
+START_DATE = datetime(2025, 4, 30)
 
 app = FastAPI()
 
