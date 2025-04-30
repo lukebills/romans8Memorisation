@@ -1,26 +1,14 @@
-import pandas as pd
 from fastapi import FastAPI, Query, HTTPException
 from fastapi.responses import JSONResponse
 from datetime import datetime
 import pytz
-import os
 
-CSV_PATH = os.path.join(os.path.dirname(__file__), "Romans_8_NIV_ESV.csv")
-
-def load_verses():
-    verses_df = pd.read_csv(CSV_PATH).dropna()
-    if not {'Verse', 'NIV', 'ESV'}.issubset(verses_df.columns):
-        raise ValueError("CSV must have 'Verse', 'NIV', and 'ESV' columns.")
-    def verse_number(ref):
-        try:
-            return int(ref.split(":")[1])
-        except Exception:
-            return 0
-    verses_df = verses_df[verses_df['Verse'].str.startswith('Romans 8:')]
-    verses_df['verse_num'] = verses_df['Verse'].apply(verse_number)
-    verses_df = verses_df[verses_df['verse_num'] >= 3].sort_values('verse_num')
-    verses_df = verses_df.reset_index(drop=True)
-    return verses_df
+# In-memory data for Romans 8:3 and 8:4 as a template
+ROMANS_8_VERSES = [
+    {"verse_num": 3, "Verse": "Romans 8:3", "NIV": "For what the law was powerless to do... (NIV)", "ESV": "For God has done what the law... (ESV)"},
+    {"verse_num": 4, "Verse": "Romans 8:4", "NIV": "in order that the righteous... (NIV)", "ESV": "in order that the righteous... (ESV)"},
+    # Add more verses as needed
+]
 
 START_VERSE = 3
 TIMEZONE = 'Australia/Perth'
@@ -34,7 +22,6 @@ def get_verse(
     version: str = Query("NIV", description="Bible version: NIV or ESV")
 ):
     try:
-        verses_df = load_verses()
         version = version.upper()
         if version not in ["NIV", "ESV"]:
             raise HTTPException(status_code=400, detail="Version must be 'NIV' or 'ESV'.")
@@ -48,12 +35,12 @@ def get_verse(
         if days_since_start < 0:
             raise HTTPException(status_code=400, detail="Date is before memorisation start.")
         verses_learned = days_since_start // 2 + 1
-        max_verses = len(verses_df)
+        max_verses = len(ROMANS_8_VERSES)
         verses_learned = min(verses_learned, max_verses)
         if user_date.strftime('%A') == 'Sunday':
-            verses = verses_df.iloc[:verses_learned]
-            text = " ".join(verses[version].tolist())
-            reference = f"Romans 8:{verses.iloc[0]['verse_num']}-{verses.iloc[verses_learned-1]['verse_num']}"
+            verses = ROMANS_8_VERSES[:verses_learned]
+            text = " ".join([v[version] for v in verses])
+            reference = f"Romans 8:{verses[0]['verse_num']}-{verses[verses_learned-1]['verse_num']}"
             return JSONResponse({
                 "date": date,
                 "verse_reference": reference,
@@ -61,7 +48,7 @@ def get_verse(
                 "text": text
             })
         else:
-            verse = verses_df.iloc[verses_learned-1]
+            verse = ROMANS_8_VERSES[verses_learned-1]
             return JSONResponse({
                 "date": date,
                 "verse_reference": verse['Verse'],
