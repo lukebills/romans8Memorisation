@@ -30,32 +30,38 @@ app = FastAPI()
 
 @app.get("/verse")
 def get_verse(date: str = Query(..., description="Date in YYYY-MM-DD format")):
-    verses_df = load_verses()
     try:
-        user_date = datetime.strptime(date, "%Y-%m-%d")
-    except ValueError:
-        raise HTTPException(status_code=400, detail="Invalid date format. Use YYYY-MM-DD.")
-    tz = pytz.timezone(TIMEZONE)
-    user_date = tz.localize(user_date)
-    days_since_start = (user_date.date() - START_DATE.date()).days
-    if days_since_start < 0:
-        raise HTTPException(status_code=400, detail="Date is before memorisation start.")
-    verses_learned = days_since_start // 2 + 1
-    max_verses = len(verses_df)
-    verses_learned = min(verses_learned, max_verses)
-    if user_date.strftime('%A') == 'Sunday':
-        verses = verses_df.iloc[:verses_learned]
-        text = " ".join(verses['text'].tolist())
-        reference = f"Romans 8:{verses.iloc[0]['verse_num']}-{verses.iloc[verses_learned-1]['verse_num']}"
-        return JSONResponse({
-            "date": date,
-            "verse_reference": reference,
-            "text": text
-        })
-    else:
-        verse = verses_df.iloc[verses_learned-1]
-        return JSONResponse({
-            "date": date,
-            "verse_reference": verse['verse_reference'],
-            "text": verse['text']
-        }) 
+        verses_df = load_verses()
+        try:
+            user_date = datetime.strptime(date, "%Y-%m-%d")
+        except ValueError:
+            raise HTTPException(status_code=400, detail="Invalid date format. Use YYYY-MM-DD.")
+        tz = pytz.timezone(TIMEZONE)
+        user_date = tz.localize(user_date)
+        days_since_start = (user_date.date() - START_DATE.date()).days
+        if days_since_start < 0:
+            raise HTTPException(status_code=400, detail="Date is before memorisation start.")
+        verses_learned = days_since_start // 2 + 1
+        max_verses = len(verses_df)
+        verses_learned = min(verses_learned, max_verses)
+        if user_date.strftime('%A') == 'Sunday':
+            verses = verses_df.iloc[:verses_learned]
+            text = " ".join(verses['text'].tolist())
+            reference = f"Romans 8:{verses.iloc[0]['verse_num']}-{verses.iloc[verses_learned-1]['verse_num']}"
+            return JSONResponse({
+                "date": date,
+                "verse_reference": reference,
+                "text": text
+            })
+        else:
+            verse = verses_df.iloc[verses_learned-1]
+            return JSONResponse({
+                "date": date,
+                "verse_reference": verse['verse_reference'],
+                "text": verse['text']
+            })
+    except Exception as e:
+        print("ERROR:", e)
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=str(e)) 
