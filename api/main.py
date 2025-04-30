@@ -181,11 +181,13 @@ def get_verse(
         days_since_start = (user_date.date() - START_DATE.date()).days
         if days_since_start < 0:
             raise HTTPException(status_code=400, detail="Date is before memorisation start.")
+        # Only use verses from START_VERSE onwards
+        filtered_verses = [v for v in ROMANS_8_VERSES if v["verse_num"] >= START_VERSE]
         verses_learned = days_since_start // 2 + 1
-        max_verses = len(ROMANS_8_VERSES)
+        max_verses = len(filtered_verses)
         verses_learned = min(verses_learned, max_verses)
         if user_date.strftime('%A') == 'Sunday':
-            verses = ROMANS_8_VERSES[:verses_learned]
+            verses = filtered_verses[:verses_learned]
             text = " ".join([v[version] for v in verses])
             reference = f"Romans 8:{verses[0]['verse_num']}-{verses[verses_learned-1]['verse_num']}"
             return JSONResponse({
@@ -195,7 +197,7 @@ def get_verse(
                 "text": text
             })
         else:
-            verse = ROMANS_8_VERSES[verses_learned-1]
+            verse = filtered_verses[verses_learned-1]
             return JSONResponse({
                 "date": date,
                 "verse_reference": verse['Verse'],
