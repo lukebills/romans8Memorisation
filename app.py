@@ -1,7 +1,7 @@
 import pandas as pd  # (can be removed if not used elsewhere)
 from fastapi import FastAPI, Query, HTTPException
 from fastapi.responses import JSONResponse
-from datetime import datetime
+from datetime import datetime, timedelta
 import pytz
 
 # In-memory data for Romans 8:3 and 8:4 as a template
@@ -158,51 +158,66 @@ ROMANS_8_VERSES = [
   },
 ]
 
-START_VERSE = 3
 TIMEZONE = 'Australia/Perth'
-START_DATE = datetime(2025, 4, 30)
+VALID_VERSIONS = {"NIV", "ESV"}
+
+tz = pytz.timezone(TIMEZONE)
 
 app = FastAPI(title="Romans 8 Memory Verse API")
 
 @app.get("/verse")
 def get_verse(
     date: str = Query(..., description="Date in YYYY-MM-DD format"),
-    version: str = Query("NIV", description="Bible version: NIV or ESV")
+    version: str = Query("NIV", description="Bible version: NIV or ESV"),
+    start_date: str = Query(..., description="Start date in YYYY-MM-DD format"),
+    start_verse: int = Query(1, description="Starting verse number (1-25)")
 ):
     try:
         version = version.upper()
-        if version not in ["NIV", "ESV"]:
+        if version not in VALID_VERSIONS:
             raise HTTPException(status_code=400, detail="Version must be 'NIV' or 'ESV'.")
+        
+        if not 1 <= start_verse <= 25:
+            raise HTTPException(status_code=400, detail="Start verse must be between 1 and 25.")
+        
         try:
-            user_date = datetime.strptime(date, "%Y-%m-%d")
+            user_dt = tz.localize(datetime.strptime(date, "%Y-%m-%d"))
+            start_dt = tz.localize(datetime.strptime(start_date, "%Y-%m-%d"))
         except ValueError:
             raise HTTPException(status_code=400, detail="Invalid date format. Use YYYY-MM-DD.")
-        tz = pytz.timezone(TIMEZONE)
-        user_date = tz.localize(user_date)
-        days_since_start = (user_date.date() - START_DATE.date()).days
-        if days_since_start < 0:
+        
+        monday_start = start_dt - timedelta(days=start_dt.weekday())
+        
+        if user_dt.date() < monday_start.date():
             raise HTTPException(status_code=400, detail="Date is before memorisation start.")
-        verses_learned = days_since_start // 2 + 1
-        max_verses = len(ROMANS_8_VERSES)
-        verses_learned = min(verses_learned, max_verses)
-        if user_date.strftime('%A') == 'Sunday':
-            verses = ROMANS_8_VERSES[:verses_learned]
-            text = " ".join([v[version] for v in verses])
-            reference = f"Romans 8:{verses[0]['verse_num']}-{verses[verses_learned-1]['verse_num']}"
-            return JSONResponse({
-                "date": date,
-                "verse_reference": reference,
-                "version": version,
-                "text": text
-            })
+
+        # Work out how many Mondays have passed
+        weeks_since_start = (user_dt.date() - monday_start.date()).days // 7
+        current_verse_num = start_verse + weeks_since_start
+
+        # Cap at the length of ROMANS_8_VERSES
+        max_verse = ROMANS_8_VERSES[-1]["verse_num"]
+        current_verse_num = min(current_verse_num, max_verse)
+
+        # Build the response
+        if user_dt.weekday() == 6:  # Sunday
+            # Include verses from start_verse to current
+            verses = [v for v in ROMANS_8_VERSES if start_verse <= v["verse_num"] <= current_verse_num]
+            reference = f"Romans 8:{start_verse}-{current_verse_num}"
+            text = " ".join(v[version] for v in verses)
         else:
-            verse = ROMANS_8_VERSES[verses_learned-1]
-            return JSONResponse({
-                "date": date,
-                "verse_reference": verse['Verse'],
-                "version": version,
-                "text": verse[version]
-            })
+            verse = next(v for v in ROMANS_8_VERSES if v["verse_num"] == current_verse_num)
+            reference = f"Romans 8:{current_verse_num}"
+            text = verse[version]
+
+        return JSONResponse({
+            "date": date,
+            "start_date": start_date,
+            "start_verse": start_verse,
+            "verse_reference": reference,
+            "version": version,
+            "text": text
+        })
     except Exception as e:
         print("ERROR:", e)
         import traceback
