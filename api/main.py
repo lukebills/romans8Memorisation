@@ -155,6 +155,90 @@ ROMANS_8_VERSES = [
     "NIV": "But if we hope for what we do not yet have, we wait for it patiently.",
     "ESV": "But if we hope for what we do not see, we wait for it with patience."
   },
+  {
+    "verse_num": 26,
+    "Verse": "Romans 8:26",
+    "NIV": "In the same way, the Spirit helps us in our weakness. We do not know what we ought to pray for, but the Spirit himself intercedes for us through wordless groans.",
+    "ESV": "Likewise the Spirit helps us in our weakness. For we do not know what to pray for as we ought, but the Spirit himself intercedes for us with groanings too deep for words."
+  },
+  {
+    "verse_num": 27,
+    "Verse": "Romans 8:27",
+    "NIV": "And he who searches our hearts knows the mind of the Spirit, because the Spirit intercedes for God’s people in accordance with the will of God.",
+    "ESV": "And he who searches hearts knows what is the mind of the Spirit, because the Spirit intercedes for the saints according to the will of God."
+  },
+  {
+    "verse_num": 28,
+    "Verse": "Romans 8:28",
+    "NIV": "And we know that in all things God works for the good of those who love him, who have been called according to his purpose.",
+    "ESV": "And we know that for those who love God all things work together for good, for those who are called according to his purpose."
+  },
+  {
+    "verse_num": 29,
+    "Verse": "Romans 8:29",
+    "NIV": "For those God foreknew he also predestined to be conformed to the image of his Son, that he might be the firstborn among many brothers and sisters.",
+    "ESV": "For those whom he foreknew he also predestined to be conformed to the image of his Son, in order that he might be the firstborn among many brothers."
+  },
+  {
+    "verse_num": 30,
+    "Verse": "Romans 8:30",
+    "NIV": "And those he predestined, he also called; those he called, he also justified; those he justified, he also glorified.",
+    "ESV": "And those whom he predestined he also called, and those whom he called he also justified, and those whom he justified he also glorified."
+  },
+  {
+    "verse_num": 31,
+    "Verse": "Romans 8:31",
+    "NIV": "What, then, shall we say in response to these things? If God is for us, who can be against us?",
+    "ESV": "What then shall we say to these things? If God is for us, who can be against us?"
+  },
+  {
+    "verse_num": 32,
+    "Verse": "Romans 8:32",
+    "NIV": "He who did not spare his own Son, but gave him up for us all—how will he not also, along with him, graciously give us all things?",
+    "ESV": "He who did not spare his own Son but gave him up for us all, how will he not also with him graciously give us all things?"
+  },
+  {
+    "verse_num": 33,
+    "Verse": "Romans 8:33",
+    "NIV": "Who will bring any charge against those whom God has chosen? It is God who justifies.",
+    "ESV": "Who shall bring any charge against God’s elect? It is God who justifies."
+  },
+  {
+    "verse_num": 34,
+    "Verse": "Romans 8:34",
+    "NIV": "Who then is the one who condemns? No one. Christ Jesus who died—more than that, who was raised to life—is at the right hand of God and is also interceding for us.",
+    "ESV": "Who is to condemn? Christ Jesus is the one who died—more than that, who was raised—who is at the right hand of God, who indeed is interceding for us."
+  },
+  {
+    "verse_num": 35,
+    "Verse": "Romans 8:35",
+    "NIV": "Who shall separate us from the love of Christ? Shall trouble or hardship or persecution or famine or nakedness or danger or sword?",
+    "ESV": "Who shall separate us from the love of Christ? Shall tribulation, or distress, or persecution, or famine, or nakedness, or danger, or sword?"
+  },
+  {
+    "verse_num": 36,
+    "Verse": "Romans 8:36",
+    "NIV": "As it is written: 'For your sake we face death all day long; we are considered as sheep to be slaughtered.'",
+    "ESV": "As it is written, 'For your sake we are being killed all the day long; we are regarded as sheep to be slaughtered.'"
+  },
+  {
+    "verse_num": 37,
+    "Verse": "Romans 8:37",
+    "NIV": "No, in all these things we are more than conquerors through him who loved us.",
+    "ESV": "No, in all these things we are more than conquerors through him who loved us."
+  },
+  {
+    "verse_num": 38,
+    "Verse": "Romans 8:38",
+    "NIV": "For I am convinced that neither death nor life, neither angels nor demons, neither the present nor the future, nor any powers,",
+    "ESV": "For I am sure that neither death nor life, nor angels nor rulers, nor things present nor things to come, nor powers,"
+  },
+  {
+    "verse_num": 39,
+    "Verse": "Romans 8:39",
+    "NIV": "neither height nor depth, nor anything else in all creation, will be able to separate us from the love of God that is in Christ Jesus our Lord.",
+    "ESV": "nor height nor depth, nor anything else in all creation, will be able to separate us from the love of God in Christ Jesus our Lord."
+  }
 ]
 
 TIMEZONE = 'Australia/Perth'
