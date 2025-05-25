@@ -165,7 +165,7 @@ ROMANS_8_VERSES = [
   {
     "verse_num": 27,
     "Verse": "Romans 8:27",
-    "NIV": "And he who searches our hearts knows the mind of the Spirit, because the Spirit intercedes for God’s people in accordance with the will of God.",
+    "NIV": "And he who searches our hearts knows the mind of the Spirit, because the Spirit intercedes for God's people in accordance with the will of God.",
     "ESV": "And he who searches hearts knows what is the mind of the Spirit, because the Spirit intercedes for the saints according to the will of God."
   },
   {
@@ -202,7 +202,7 @@ ROMANS_8_VERSES = [
     "verse_num": 33,
     "Verse": "Romans 8:33",
     "NIV": "Who will bring any charge against those whom God has chosen? It is God who justifies.",
-    "ESV": "Who shall bring any charge against God’s elect? It is God who justifies."
+    "ESV": "Who shall bring any charge against God's elect? It is God who justifies."
   },
   {
     "verse_num": 34,
@@ -288,7 +288,7 @@ def get_verse(
             # Include verses from start_verse to current
             verses = [v for v in ROMANS_8_VERSES if start_verse <= v["verse_num"] <= current_verse_num]
             reference = f"Romans 8:{start_verse}-{current_verse_num}"
-            text = " ".join(v[version] for v in verses)
+            text = "\n".join(f"[{v['verse_num']}] {v[version]}" for v in verses)
         else:
             verse = next(v for v in ROMANS_8_VERSES if v["verse_num"] == current_verse_num)
             reference = f"Romans 8:{current_verse_num}"
